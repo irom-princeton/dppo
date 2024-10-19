@@ -1,7 +1,7 @@
 defaults:
   - _self_
 hydra:
-  run:  
+  run:
     dir: ${logdir}
 _target_: agent.finetune.train_ppo_diffusion_img_agent.TrainPPOImgDiffusionAgent
 
@@ -60,22 +60,22 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 200
+  n_train_itr: 151
   n_critic_warmup_itr: 2
   n_steps: 300
   gamma: 0.999
   augment: True
   grad_accumulate: 15
-  actor_lr: 1e-5
+  actor_lr: 1e-4
   actor_weight_decay: 0
   actor_lr_scheduler:
-    first_cycle_steps: 200
+    first_cycle_steps: 1000
     warmup_steps: 10
-    min_lr: 1e-5
+    min_lr: 1e-4
   critic_lr: 1e-3
   critic_weight_decay: 0
   critic_lr_scheduler:
-    first_cycle_steps: 200
+    first_cycle_steps: 1000
     warmup_steps: 10
     min_lr: 1e-3
   save_model_freq: 100
@@ -96,7 +96,7 @@ train:
 model:
   _target_: model.diffusion.diffusion_ppo.PPODiffusion
   # HP to tune
-  gamma_denoising: 0.9
+  gamma_denoising: 0.99
   clip_ploss_coef: 0.01
   clip_ploss_coef_base: 0.001
   clip_ploss_coef_rate: 3
@@ -158,10 +158,10 @@ model:
         embed_style: embed2
         embed_norm: 0
     img_cond_steps: ${img_cond_steps}
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     mlp_dims: [256, 256, 256]
     activation_type: Mish
     residual_style: True
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   ft_denoising_steps: ${ft_denoising_steps}
   horizon_steps: ${horizon_steps}
   obs_dim: ${obs_dim}

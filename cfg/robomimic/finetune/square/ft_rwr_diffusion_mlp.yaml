@@ -46,7 +46,7 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 300
+  n_train_itr: 201
   n_critic_warmup_itr: 2
   n_steps: 400
   gamma: 0.999

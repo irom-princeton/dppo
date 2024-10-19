@@ -49,7 +49,7 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 1000
+  n_train_itr: 201
   n_critic_warmup_itr: 2
   n_steps: 400
   gamma: 0.999
@@ -58,7 +58,7 @@ train:
   actor_lr_scheduler:
     first_cycle_steps: 1000
     warmup_steps: 10
-    min_lr: 1e-6
+    min_lr: 1e-5
   critic_lr: 1e-3
   critic_weight_decay: 0
   critic_lr_scheduler:
@@ -82,7 +82,7 @@ train:
 model:
   _target_: model.diffusion.diffusion_dipo.DIPODiffusion
   # HP to tune
-  min_sampling_denoising_std: 0.08
+  min_sampling_denoising_std: 0.1
   randn_clip_value: 3
   #
   network_path: ${base_policy_path}
@@ -96,12 +96,12 @@ model:
     action_dim: ${action_dim}
   critic:
     _target_: model.common.critic.CriticObsAct
-    action_dim: ${action_dim}
-    action_steps: ${act_steps}
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     mlp_dims: [256, 256, 256]
     activation_type: Mish
     residual_style: True
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
+    action_dim: ${action_dim}
+    action_steps: ${act_steps}
   horizon_steps: ${horizon_steps}
   obs_dim: ${obs_dim}
   action_dim: ${action_dim}
