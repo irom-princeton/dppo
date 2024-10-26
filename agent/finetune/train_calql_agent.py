@@ -418,7 +418,6 @@ class TrainCalQLAgent(TrainAgent):
                         reward_to_go_b,
                         terminated_b,
                         self.gamma,
-                        alpha,
                     )
                     self.critic_optimizer.zero_grad()
                     loss_critic.backward()

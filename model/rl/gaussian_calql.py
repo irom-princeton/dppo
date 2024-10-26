@@ -63,7 +63,6 @@ class CalQL_Gaussian(GaussianModel):
         returns,
         terminated,
         gamma,
-        alpha,
     ):
         B = len(actions)
 
@@ -71,17 +70,17 @@ class CalQL_Gaussian(GaussianModel):
         q_data1, q_data2 = self.critic(obs, actions)
         with torch.no_grad():
             # repeat for action samples
-            next_obs["state"] = next_obs["state"].repeat_interleave(
+            next_obs_repeated = {"state": next_obs["state"].repeat_interleave(
                 self.cql_n_actions, dim=0
-            )
+            )}
 
             # Get the next actions and logprobs
             next_actions, next_logprobs = self.forward(
-                next_obs,
+                next_obs_repeated,
                 deterministic=False,
                 get_logprob=True,
             )
-            next_q1, next_q2 = self.target_critic(next_obs, next_actions)
+            next_q1, next_q2 = self.target_critic(next_obs_repeated, next_actions)
             next_q = torch.min(next_q1, next_q2)
 
             # Reshape the next_q to match the number of samples
@@ -96,9 +95,6 @@ class CalQL_Gaussian(GaussianModel):
             # Get the target Q values
             target_q = rewards + gamma * (1 - terminated) * next_q
 
-            # Subtract the entropy bonus
-            target_q = target_q - alpha * next_logprobs
-
         # TD loss
         td_loss_1 = nn.functional.mse_loss(q_data1, target_q)
         td_loss_2 = nn.functional.mse_loss(q_data2, target_q)
@@ -107,6 +103,12 @@ class CalQL_Gaussian(GaussianModel):
         log_rand_pi = 0.5 ** torch.prod(torch.tensor(random_actions.shape[-2:]))
         pi_actions, log_pi = self.forward(
             obs,
+            deterministic=False,
+            reparameterize=False,
+            get_logprob=True,
+        )  # no gradient
+        pi_next_actions, log_pi_next = self.forward(
+            next_obs,
             deterministic=False,
             reparameterize=False,
             get_logprob=True,
@@ -130,16 +132,25 @@ class CalQL_Gaussian(GaussianModel):
 
         # Policy action Q values
         q_pi_1, q_pi_2 = self.critic(obs, pi_actions)
-        q_pi_1 = q_pi_1 - log_pi
-        q_pi_2 = q_pi_2 - log_pi
+        q_pi_next_1, q_pi_next_2 = self.critic(next_obs, pi_next_actions)
 
         # Ensure calibration w.r.t. value function estimate
         q_pi_1 = torch.max(q_pi_1, returns)[:, None]  # (B, 1)
         q_pi_2 = torch.max(q_pi_2, returns)[:, None]  # (B, 1)
-        cat_q_1 = torch.cat([q_rand_1, q_pi_1], dim=-1)  # (B, num_samples+1)
+        q_pi_next_1 = torch.max(q_pi_next_1, returns)[:, None]  # (B, 1)
+        q_pi_next_2 = torch.max(q_pi_next_2, returns)[:, None]  # (B, 1)
+
+        # cql_importance_sample
+        q_pi_1 = q_pi_1 - log_pi
+        q_pi_2 = q_pi_2 - log_pi
+        q_pi_next_1 = q_pi_next_1 - log_pi_next
+        q_pi_next_2 = q_pi_next_2 - log_pi_next
+        cat_q_1 = torch.cat([q_rand_1, q_pi_1, q_pi_next_1], dim=-1)  # (B, num_samples+1)
         cql_qf1_ood = torch.logsumexp(cat_q_1, dim=-1)  # max over num_samples
-        cat_q_2 = torch.cat([q_rand_2, q_pi_2], dim=-1)  # (B, num_samples+1)
+        cat_q_2 = torch.cat([q_rand_2, q_pi_2, q_pi_next_2], dim=-1)  # (B, num_samples+1)
         cql_qf2_ood = torch.logsumexp(cat_q_2, dim=-1)  # sum over num_samples
+
+        # skip cal_lagrange since the paper shows cql_target_action_gap not used in kitchen
 
         # Subtract the log likelihood of the data
         cql_qf1_diff = torch.clamp(
