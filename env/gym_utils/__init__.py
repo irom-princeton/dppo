@@ -165,7 +165,9 @@ def make_async(
             # https://github.com/ARISE-Initiative/robosuite/blob/92abf5595eddb3a845cd1093703e5a3ccd01e77e/robosuite/environments/base.py#L247-L248
             env.env.hard_reset = False
         else:  # d3il, gym
-            env = make_(id, render=render, **kwargs)
+            if "kitchen" not in id:  # d4rl kitchen does not support rendering!
+                kwargs["render"] = render
+            env = make_(id, **kwargs)
 
         # add wrappers
         if wrappers is not None:
