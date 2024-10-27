@@ -249,29 +249,28 @@ class TrainPPOExactDiffusionAgent(TrainPPODiffusionAgent):
                     )
                 }
                 samples_k = einops.rearrange(
-                    torch.tensor(samples_trajs).float().to(self.device),
+                    torch.tensor(samples_trajs, device=self.device).float(),
                     "s e h d -> (s e) h d",
                 )
                 returns_k = (
-                    torch.tensor(returns_trajs).float().to(self.device).reshape(-1)
+                    torch.tensor(returns_trajs, device=self.device).float().reshape(-1)
                 )
                 values_k = (
-                    torch.tensor(values_trajs).float().to(self.device).reshape(-1)
+                    torch.tensor(values_trajs, device=self.device).float().reshape(-1)
                 )
                 advantages_k = (
-                    torch.tensor(advantages_trajs).float().to(self.device).reshape(-1)
+                    torch.tensor(advantages_trajs, device=self.device).float().reshape(-1)
                 )
-                logprobs_k = torch.tensor(logprobs_trajs).float().to(self.device)
+                logprobs_k = torch.tensor(logprobs_trajs, device=self.device).float()
 
                 # Update policy and critic
                 total_steps = self.n_steps * self.n_envs
-                inds_k = np.arange(total_steps)
                 clipfracs = []
                 for update_epoch in range(self.update_epochs):
 
                     # for each epoch, go through all data in batches
                     flag_break = False
-                    np.random.shuffle(inds_k)
+                    inds_k = torch.randperm(total_steps, device=self.device)
                     num_batch = max(1, total_steps // self.batch_size)  # skip last ones
                     for batch in range(num_batch):
                         start = batch * self.batch_size
