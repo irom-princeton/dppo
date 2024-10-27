@@ -61,8 +61,8 @@ train:
     first_cycle_steps: 1000
     warmup_steps: 10
     min_lr: 3e-4
-  save_model_freq: 10
-  val_freq: 10
+  save_model_freq: 100
+  val_freq: 20
   render:
     freq: 1
     num: 0
@@ -70,7 +70,7 @@ train:
   # CalQL specific
   train_online: False
   batch_size: 256
-  n_random_actions: 4
+  n_random_actions: 10
   target_ema_rate: 0.005
   scale_reward_factor: 1.0
   num_update: 1000

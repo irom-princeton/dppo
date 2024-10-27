@@ -73,7 +73,7 @@ train:
   target_ema_rate: 0.01
   scale_reward_factor: 1
   critic_num_update: 3
-  buffer_size: 400000
+  buffer_size: 500000
   n_eval_episode: 40
   n_explore_steps: 0
   update_freq: 2
