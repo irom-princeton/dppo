@@ -20,7 +20,7 @@ class IBRL_Gaussian(GaussianModel):
         critic,
         n_critics,
         soft_action_sample=False,
-        soft_action_sample_beta=0.1,
+        soft_action_sample_beta=10,
         **kwargs,
     ):
         super().__init__(network=actor, **kwargs)

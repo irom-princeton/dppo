@@ -82,8 +82,6 @@ class TrainCalQLAgent(TrainAgent):
         if self.train_online:
             # number of episode to colect per epoch for training
             self.n_episode_per_epoch = cfg.train.n_episode_per_epoch
-            # UTD ratio
-            self.online_utd_ratio = cfg.train.online_utd_ratio
 
         # Eval episodes
         self.n_eval_episode = cfg.train.n_eval_episode
