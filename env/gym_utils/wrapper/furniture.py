@@ -132,9 +132,10 @@ class FurnitureRLSimEnvMultiStepWrapper(gym.Wrapper):
 
         nobs: np.ndarray = self.process_obs(obs)
         truncated: np.ndarray = truncated.squeeze().cpu().numpy()
-        terminated: np.ndarray = np.zeros_like(truncated, dtype=bool)
+        # terminated: np.ndarray = np.zeros_like(truncated, dtype=bool)
 
-        return {"state": nobs}, reward, terminated, truncated, info
+        # since we only assign reward at the timestep where one stage is finished, and reward does not accumulate, we consider the final step of the episode as terminal
+        return {"state": nobs}, reward, truncated, truncated, info
 
     def _inner_step(self, action_chunk: torch.Tensor):
         dense_reward = torch.zeros(action_chunk.shape[0], device=action_chunk.device)
