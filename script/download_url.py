@@ -7,6 +7,12 @@ def get_dataset_download_url(cfg):
         return "https://drive.google.com/drive/u/1/folders/1BJu8NklriunDHsDrLT6fEpcro3_2IPFf"
     elif env == "halfcheetah-medium-v2":
         return "https://drive.google.com/drive/u/1/folders/1Drel26tiuQ9oD3YNf1eyy0UVaf5SQj-U"
+    elif env == "kitchen-complete-v0":
+        return "https://drive.google.com/drive/u/1/folders/18aqg7KIv-YNXohTsRR7Zmg-RyDtdhkLc"
+    elif env == "kitchen-partial-v0":
+        return "https://drive.google.com/drive/u/1/folders/1zLOx1q4FbJK1ZWLui_vhM2x1fMEkBC2D"
+    elif env == "kitchen-mixed-v0":
+        return "https://drive.google.com/drive/u/1/folders/1HRMM16UC10A00oBqjYOL1E8hS5icwtvo"
     # D3IL
     elif env == "avoid" and cfg.mode == "d56_r12":  # M1
         return "https://drive.google.com/drive/u/1/folders/1ZAPvLQwv2y4Q98UDVKXFT4fvGF5yhD_o"
@@ -14,7 +20,20 @@ def get_dataset_download_url(cfg):
         return "https://drive.google.com/drive/u/1/folders/1wyJi1Zbnd6JNy4WGszHBH40A0bbl-vkd"
     elif env == "avoid" and cfg.mode == "d58_r12":  # M3
         return "https://drive.google.com/drive/u/1/folders/1mNXCIPnCO_FDBlEj95InA9eWJM2XcEEj"
-    # Robomimic
+    # Robomimic-PH
+    elif (
+        env == "can"
+        and "ph" in cfg.train_dataset_path
+        and "img" not in cfg.train_dataset_path
+    ):
+        return "https://drive.google.com/drive/folders/1rpVsdpqWPygL89E-t4SLQmZgwQ3mpNnY?usp=drive_link"
+    elif (
+        env == "square"
+        and "ph" in cfg.train_dataset_path
+        and "img" not in cfg.train_dataset_path
+    ):
+        return "https://drive.google.com/drive/folders/1wqqjT9JZ9LX11l2Sz_vGxfcT3BfcNrGk?usp=drive_link"
+    # Robomimic-MH
     elif env == "lift" and "img" not in cfg.train_dataset_path:  # state
         return "https://drive.google.com/drive/u/1/folders/1lbXgMKBTAiFdJqPZqWXpwjEyrVW16MBu"
     elif env == "lift" and "img" in cfg.train_dataset_path:  # img
@@ -58,6 +77,12 @@ def get_normalization_download_url(cfg):
         return "https://drive.google.com/file/d/1NSX7t3DFKaBj5HNpv91Oo5h6oXTk0zoo/view?usp=drive_link"
     elif env == "halfcheetah-medium-v2":
         return "https://drive.google.com/file/d/1LlwCMfy1b5e8jSx99CV3lWhcrQWrI2Jm/view?usp=drive_link"
+    elif env == "kitchen-complete-v0":
+        return "https://drive.google.com/file/d/1tBATWLoP1E5s08vr5fiUZBzn8EEsjEZh/view?usp=drive_link"
+    elif env == "kitchen-partial-v0":
+        return "https://drive.google.com/file/d/1Ptt0cwQwmb5_HGNM-zggRaDKfkqqNO5e/view?usp=drive_link"
+    elif env == "kitchen-mixed-v0":
+        return "https://drive.google.com/file/d/11gj846QTYFPeV14nhcL5Z9OA5RHIGVt1/view?usp=drive_link"
     # D3IL
     elif env == "avoiding-m5" and cfg.mode == "d56_r12":  # M1
         return "https://drive.google.com/file/d/1PubKaPabbiSdWYpGmouDhYfXp4QwNHFG/view?usp=drive_link"
@@ -65,7 +90,20 @@ def get_normalization_download_url(cfg):
         return "https://drive.google.com/file/d/1Hoohw8buhsLzXoqivMA6IzKS5Izlj07_/view?usp=drive_link"
     elif env == "avoiding-m5" and cfg.mode == "d58_r12":  # M3
         return "https://drive.google.com/file/d/1qt7apV52C9Tflsc-A55J6uDMHzaFa1wN/view?usp=drive_link"
-    # Robomimic
+    # Robomimic-PH
+    elif (
+        env == "can"
+        and "ph" in cfg.normalization_path
+        and "img" not in cfg.normalization_path
+    ):
+        return "https://drive.google.com/file/d/1y04FAEXgK6UlZuDiQzTumS9lz-Ufn47B/view?usp=drive_link"
+    elif (
+        env == "square"
+        and "ph" in cfg.normalization_path
+        and "img" not in cfg.normalization_path
+    ):
+        return "https://drive.google.com/file/d/1_75UM0frCZVtcROgfWsdJ0FstToZd1b5/view?usp=drive_link"
+    # Robomimic-MH
     elif env == "lift" and "img" not in cfg.normalization_path:  # state
         return "https://drive.google.com/file/d/1d3WjwRds-7I5bBFpZuY27OT9ycb8r_QM/view?usp=drive_link"
     elif env == "lift" and "img" in cfg.normalization_path:  # img
@@ -120,6 +158,71 @@ def get_checkpoint_download_url(cfg):
         in path
     ):
         return "https://drive.google.com/file/d/1o9ryyeZQAsaB4ffUTCJkIaGCi0frL3G4/view?usp=drive_link"
+    # Demo-RL
+    elif (
+        "halfcheetah-medium-v2_pre_diffusion_mlp_ta1_td20/2024-09-29_02-13-10_42/checkpoint/state_1000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1Oi5JhsU45ScHdlrtn5AX8Ji7InLBVj4D/view?usp=drive_link"
+    elif (
+        "halfcheetah-medium-v2_pre_gaussian_mlp_ta1/2024-09-28_18-48-54_42/checkpoint/state_500.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/14rbYGaCxvj1PtELKVfdXNHJ1Od2G6FLw/view?usp=drive_link"
+    elif (
+        "halfcheetah-medium-v2_calql_mlp_ta1/2024-09-29_22-59-08_42/checkpoint/state_49.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1Xf758xzsAqpFwV955OVUNL6Za90XPo1K/view?usp=drive_link"
+
+    elif (
+        "kitchen-complete-v0_pre_diffusion_mlp_ta4_td20/2024-10-20_16-47-42_42/checkpoint/state_8000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1YBwyNd30a4_inu2sZzNSNLJQsj8fN3ZX/view?usp=drive_link"
+    elif (
+        "kitchen-complete-v0_calql_mlp_ta1/2024-10-26_01-01-33_42/checkpoint/state_999.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1K4V59iXNQbpOvu3u5y6C9R5piMU9idYm/view?usp=drive_link"
+    elif (
+        "kitchen-complete-v0_pre_gaussian_mlp_ta1/2024-10-25_14-48-43_42/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1tQYgnkdhR5wnuXC4Ha_mKHuIdg6J627s/view?usp=drive_link"
+
+    elif (
+        "kitchen-partial-v0_pre_diffusion_mlp_ta4_td20/2024-10-20_16-48-29_42/checkpoint/state_8000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1oSupKkUjCFQVWBIJV5Seh-CclWhgpopS/view?usp=drive_link"
+    elif (
+        "kitchen-partial-v0_calql_mlp_ta1/2024-10-25_21-26-51_42/checkpoint/state_980.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/17HUDp3l8mJsMIW-DRraKPhUkH44KGTbA/view?usp=drive_link"
+    elif (
+        "kitchen-partial-v0_pre_gaussian_mlp_ta1/2024-10-25_01-45-52_42/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1-ZmGRPi4jMS7HfqHPvWrSPxNSoTwih6q/view?usp=drive_link"
+
+    elif (
+        "kitchen-mixed-v0_pre_diffusion_mlp_ta4_td20/2024-10-20_16-48-28_42/checkpoint/state_8000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1X24Hqbn4b4xyLK_1A3D6zhSgsN7frVCG/view?usp=drive_link"
+    elif (
+        "kitchen-mixed-v0_calql_mlp_ta1/2024-10-25_21-36-13_42/checkpoint/state_999.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1AP7bbzAwwfuSLmV1HkQLfmd76MXQn2Za/view?usp=drive_link"
+    elif (
+        "kitchen-mixed-v0_pre_gaussian_mlp_ta1/2024-10-25_01-39-44_42/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1LEzGhMOqL3YZFXMGn1mTcOh-tm4Lh1SH/view?usp=drive_link"
+
     ######################################
     ####             D3IL
     ######################################
@@ -246,6 +349,32 @@ def get_checkpoint_download_url(cfg):
         in path
     ):
         return "https://drive.google.com/file/d/1xSgwGG40zdoO2DDSM79l0rMHeNmaifnq/view?usp=drive_link"
+    # demo-PH
+    elif (
+        "can_pre_diffusion_mlp_ta1_td20/2024-10-14_10-54-33_0/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1Ze86hw2E0jJinn3Vx683JQ10Gq5FIJad/view?usp=drive_link"
+    elif (
+        "can_pre_gaussian_mlp_ta1/2024-10-08_20-52-04_0/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1jP3mEOhZojWiTXCMZ0ajFRMkAAmonGxV/view?usp=drive_link"
+    elif "can_calql_mlp_ta1/2024-10-09_11-05-07_0/checkpoint/state_999.pt" in path:
+        return "https://drive.google.com/file/d/1ERaZKTXmL-vdyU8PZ2X9GjFIMVKJjA2N/view?usp=drive_link"
+    # demo-MH
+    elif (
+        "can_pre_diffusion_mlp_ta1_td20/2024-09-29_15-43-07_42/checkpoint/state_8000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1pEs1cK1x5obAtJA9pFSN1CWG79gNhH24/view?usp=drive_link"
+    elif (
+        "can_pre_gaussian_mlp_ta1/2024-09-28_13-43-59_42/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1Fa3yflkvYSAy6PKT646U1VAqUJ0YHqsj/view?usp=drive_link"
+    elif "can_calql_mlp_ta1/2024-10-25_22-30-16_42/checkpoint/state_999.pt" in path:
+        return "https://drive.google.com/file/d/1AA94uEaK_SzG2mTpaKqZIwNMh6omL_g0/view?usp=drive_link"
     ######################################
     ####             Robomimic-Square
     ######################################
@@ -286,6 +415,32 @@ def get_checkpoint_download_url(cfg):
         in path
     ):
         return "https://drive.google.com/file/d/1LczXhgeNtQfqySsfGNbbviPrlLwyh-E3/view?usp=drive_link"
+    # demo-PH
+    elif (
+        "square_pre_diffusion_mlp_ta1_td20/2024-10-14_10-54-33_0/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1_Jnz14ySxqbtZa9IIEWkXqy5_-EwJLBw/view?usp=drive_link"
+    elif (
+        "square_pre_gaussian_mlp_ta1/2024-10-08_20-52-42_0/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1ZPWKUoZ93OqqVX3ephQMkpeBZoYrceM5/view?usp=drive_link"
+    elif "square_calql_mlp_ta1/2024-10-09_11-05-07_0/checkpoint/state_999.pt" in path:
+        return "https://drive.google.com/file/d/1_7YtUwRd_U5tuOvhHogJDhkEsE-4D24V/view?usp=drive_link"
+    # demo-MH
+    elif (
+        "square_pre_diffusion_mlp_ta1_td20/2024-09-29_02-14-14_42/checkpoint/state_8000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1ks1PnUBvFVWPnpGnYL8_eIfLNeGZbv1p/view?usp=drive_link"
+    elif (
+        "square_pre_gaussian_mlp_ta1/2024-09-28_13-42-43_42/checkpoint/state_5000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1uIOn8QUkGRbhZLkQ9ziOkP7yGQnpYdk7/view?usp=drive_link"
+    elif "square_calql_mlp_ta1/2024-10-25_22-44-12_42/checkpoint/state_999.pt" in path:
+        return "https://drive.google.com/file/d/1zgzG6bx6ugAEaq72z9WpXX6iewClcKTV/view?usp=drive_link"
     ######################################
     ####             Robomimic-Transport
     ######################################
