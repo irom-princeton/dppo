@@ -63,6 +63,23 @@ class PPO_Gaussian(VPG_Gaussian):
         oldlogprobs = oldlogprobs.clamp(min=-5, max=2)
         entropy_loss = -entropy
 
+        bc_loss = 0.0
+        if use_bc_loss:
+            # See Eqn. 2 of https://arxiv.org/pdf/2403.03949.pdf
+            # Give a reward for maximizing probability of teacher policy's action with current policy.
+            # Actions are chosen along trajectory induced by current policy.
+
+            # Get counterfactual teacher actions
+            samples = self.forward(
+                cond=obs,
+                deterministic=False,
+                use_base_policy=True,
+            )
+            # Get logprobs of teacher actions under this policy
+            bc_logprobs, _, _ = self.get_logprobs(obs, samples, use_base_policy=False)
+            bc_logprobs = bc_logprobs.clamp(min=-5, max=2)
+            bc_loss = -bc_logprobs.mean()
+
         # get ratio
         logratio = newlogprobs - oldlogprobs
         ratio = logratio.exp()
@@ -99,25 +116,6 @@ class PPO_Gaussian(VPG_Gaussian):
             v_loss = 0.5 * v_loss_max.mean()
         else:
             v_loss = 0.5 * ((newvalues - returns) ** 2).mean()
-
-        bc_loss = 0.0
-        if use_bc_loss:
-            # See Eqn. 2 of https://arxiv.org/pdf/2403.03949.pdf
-            # Give a reward for maximizing probability of teacher policy's action with current policy.
-            # Actions are chosen along trajectory induced by current policy.
-
-            # Get counterfactual teacher actions
-            samples = self.forward(
-                cond=obs.float()
-                .unsqueeze(1)
-                .to(self.device),  # B x horizon=1 x obs_dim
-                deterministic=False,
-                use_base_policy=True,
-            )
-            # Get logprobs of teacher actions under this policy
-            bc_logprobs, _, _ = self.get_logprobs(obs, samples, use_base_policy=False)
-            bc_logprobs = bc_logprobs.clamp(min=-5, max=2)
-            bc_loss = -bc_logprobs.mean()
         return (
             pg_loss,
             entropy_loss,

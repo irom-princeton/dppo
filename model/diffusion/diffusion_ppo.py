@@ -109,9 +109,7 @@ class PPODiffusion(VPGDiffusion):
 
             # Get counterfactual teacher actions
             samples = self.forward(
-                cond=obs.float()
-                .unsqueeze(1)
-                .to(self.device),  # B x horizon=1 x obs_dim
+                cond=obs,
                 deterministic=False,
                 return_chain=True,
                 use_base_policy=True,
@@ -119,7 +117,7 @@ class PPODiffusion(VPGDiffusion):
             # Get logprobs of teacher actions under this policy
             bc_logprobs = self.get_logprobs(
                 obs,
-                samples.chains,  # n_env x denoising x horizon x act
+                samples.chains,
                 get_ent=False,
                 use_base_policy=False,
             )
