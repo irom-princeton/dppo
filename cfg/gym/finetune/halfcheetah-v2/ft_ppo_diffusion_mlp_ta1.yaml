@@ -1,21 +1,20 @@
 defaults:
   - _self_
 hydra:
-  run:
+  run:  
     dir: ${logdir}
 _target_: agent.finetune.train_ppo_diffusion_agent.TrainPPODiffusionAgent
 
-name: ${env_name}_ft_diffusion_mlp_ta${horizon_steps}_td${denoising_steps}_tdf${ft_denoising_steps}
-logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/can_pre_diffusion_mlp_ta1_td20/2024-09-29_15-43-07_42/checkpoint/state_8000.pt
-robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
-normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}/normalization.npz
+name: ${env_name}_ppo_diffusion_mlp_ta${horizon_steps}_td${denoising_steps}_tdf${ft_denoising_steps}
+logdir: ${oc.env:DPPO_LOG_DIR}/gym-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/gym-pretrain/halfcheetah-medium-v2_pre_diffusion_mlp_ta1_td20/2024-09-29_02-13-10_42/checkpoint/state_1000.pt
+normalization_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/normalization.npz
 
 seed: 42
 device: cuda:0
-env_name: can
-obs_dim: 23
-action_dim: 7
+env_name: halfcheetah-medium-v2
+obs_dim: 17
+action_dim: 6
 denoising_steps: 20
 ft_denoising_steps: 10
 cond_steps: 1
@@ -23,18 +22,15 @@ horizon_steps: 1
 act_steps: 1
 
 env:
-  n_envs: 50
+  n_envs: 20
   name: ${env_name}
-  best_reward_threshold_for_success: 1
-  max_episode_steps: 300
+  max_episode_steps: 1000
+  reset_at_iteration: False
   save_video: False
+  best_reward_threshold_for_success: 3  # success rate not relevant for gym tasks
   wrappers:
-    robomimic_lowdim:
+    mujoco_locomotion_lowdim:
       normalization_path: ${normalization_path}
-      low_dim_keys: ['robot0_eef_pos',
-                    'robot0_eef_quat',
-                    'robot0_gripper_qpos',
-                    'object'] # same order of preprocessed observations
     multi_step:
       n_obs_steps: ${cond_steps}
       n_action_steps: ${act_steps}
@@ -43,14 +39,14 @@ env:
 
 wandb:
   entity: ${oc.env:DPPO_WANDB_ENTITY}
-  project: robomimic-${env_name}-finetune
+  project: gym-${env_name}-finetune
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 301
-  n_critic_warmup_itr: 2
-  n_steps: 300
-  gamma: 0.999
+  n_train_itr: 501
+  n_critic_warmup_itr: 0
+  n_steps: 1000
+  gamma: 0.99
   actor_lr: 1e-4
   actor_weight_decay: 0
   actor_lr_scheduler:
@@ -72,8 +68,8 @@ train:
   reward_scale_running: True
   reward_scale_const: 1.0
   gae_lambda: 0.95
-  batch_size: 15000
-  update_epochs: 10
+  batch_size: 10000
+  update_epochs: 5
   vf_coef: 0.5
   target_kl: 1
 
@@ -82,7 +78,7 @@ model:
   # HP to tune
   gamma_denoising: 0.99
   clip_ploss_coef: 0.01
-  clip_ploss_coef_base: 0.001
+  clip_ploss_coef_base: 0.01
   clip_ploss_coef_rate: 3
   randn_clip_value: 3
   min_sampling_denoising_std: 0.1
@@ -93,16 +89,17 @@ model:
     _target_: model.diffusion.mlp_diffusion.DiffusionMLP
     time_dim: 16
     mlp_dims: [512, 512, 512]
+    activation_type: ReLU
     residual_style: True
     cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     horizon_steps: ${horizon_steps}
     action_dim: ${action_dim}
   critic:
     _target_: model.common.critic.CriticObs
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     mlp_dims: [256, 256, 256]
     activation_type: Mish
     residual_style: True
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   ft_denoising_steps: ${ft_denoising_steps}
   horizon_steps: ${horizon_steps}
   obs_dim: ${obs_dim}

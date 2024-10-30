@@ -7,7 +7,7 @@ _target_: agent.finetune.train_ibrl_agent.TrainIBRLAgent
 
 name: ${env_name}_ibrl_mlp_ta${horizon_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path:
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/can_pre_gaussian_mlp_ta1/2024-09-28_13-43-59_42/checkpoint/state_5000.pt
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
 normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}/normalization.npz
 offline_dataset_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}/train.npz
@@ -73,7 +73,7 @@ train:
   target_ema_rate: 0.01
   scale_reward_factor: 1
   critic_num_update: 3
-  buffer_size: 500000
+  buffer_size: 400000
   n_eval_episode: 40
   n_explore_steps: 0
   update_freq: 2

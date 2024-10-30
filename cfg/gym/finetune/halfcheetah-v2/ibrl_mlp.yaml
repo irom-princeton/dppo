@@ -8,7 +8,7 @@ _target_: agent.finetune.train_ibrl_agent.TrainIBRLAgent
 name: ${env_name}_ibrl_mlp_ta${horizon_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/gym-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
 normalization_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/normalization.npz
-base_policy_path:
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/gym-pretrain/halfcheetah-medium-v2_pre_gaussian_mlp_ta1/2024-09-28_18-48-54_42/checkpoint/state_500.pt
 offline_dataset_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/train.npz
 
 seed: 42
@@ -87,7 +87,7 @@ model:
     fixed_std: 0.1
     cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     horizon_steps: ${horizon_steps}
-    
+    action_dim: ${action_dim}
   critic:
     _target_: model.common.critic.CriticObsAct
     mlp_dims: [256, 256, 256]

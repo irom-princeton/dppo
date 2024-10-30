@@ -7,7 +7,7 @@ _target_: agent.finetune.train_ppo_diffusion_agent.TrainPPODiffusionAgent
 
 name: ${env_name}_ft_diffusion_mlp_ta${horizon_steps}_td${denoising_steps}_tdf${ft_denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path: 
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/square_pre_diffusion_mlp_ta1_td20/2024-10-14_10-54-33_0/checkpoint/state_5000.pt
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
 normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}-ph/normalization.npz
 
@@ -23,7 +23,7 @@ horizon_steps: 1
 act_steps: 1
 
 env:
-  n_envs: 50
+  n_envs: 40
   name: ${env_name}
   best_reward_threshold_for_success: 1
   max_episode_steps: 400
@@ -43,11 +43,11 @@ env:
 
 wandb:
   entity: ${oc.env:DPPO_WANDB_ENTITY}
-  project: robomimic-ph-${env_name}-finetune
+  project: robomimic-${env_name}-finetune
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 500
+  n_train_itr: 301
   n_critic_warmup_itr: 2
   n_steps: 400
   gamma: 0.999
@@ -72,7 +72,7 @@ train:
   reward_scale_running: True
   reward_scale_const: 1.0
   gae_lambda: 0.95
-  batch_size: 10000
+  batch_size: 8000
   update_epochs: 10
   vf_coef: 0.5
   target_kl: 1

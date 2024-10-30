@@ -7,7 +7,7 @@ _target_: agent.finetune.train_calql_agent.TrainCalQLAgent
 
 name: ${env_name}_calql_mlp_ta${horizon_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/gym-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path:
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/gym-pretrain/kitchen-mixed-v0_calql_mlp_ta1/2024-10-25_21-36-13_42/checkpoint/state_999.pt
 normalization_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/normalization.npz
 offline_dataset_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/train.npz
 

@@ -7,7 +7,7 @@ _target_: agent.finetune.train_ppo_diffusion_agent.TrainPPODiffusionAgent
 
 name: ${env_name}_ppo_diffusion_mlp_ta${horizon_steps}_td${denoising_steps}_tdf${ft_denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/gym-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path:
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/gym-pretrain/kitchen-complete-v0_pre_diffusion_mlp_ta4_td20/2024-10-20_16-47-42_42/checkpoint/state_8000.pt
 normalization_path: ${oc.env:DPPO_DATA_DIR}/gym/${env_name}/normalization.npz
 
 seed: 42

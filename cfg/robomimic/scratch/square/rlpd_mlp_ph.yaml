@@ -42,7 +42,7 @@ env:
 
 wandb:
   entity: ${oc.env:DPPO_WANDB_ENTITY}
-  project: rlpd-ph-${env_name}
+  project: rlpd-${env_name}
   run: ${now:%H-%M-%S}_${name}
 
 train:

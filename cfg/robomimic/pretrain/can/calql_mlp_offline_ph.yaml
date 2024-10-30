@@ -42,7 +42,7 @@ env:
 
 wandb:
   entity: ${oc.env:DPPO_WANDB_ENTITY}
-  project: calql-ph-${env_name}
+  project: calql-${env_name}
   run: ${now:%H-%M-%S}_${name}
 
 train:

@@ -7,7 +7,7 @@ _target_: agent.finetune.train_calql_agent.TrainCalQLAgent
 
 name: ${env_name}_calql_mlp_ta${horizon_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-finetune/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path:
+base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/square_calql_mlp_ta1/2024-10-09_11-05-07_0/checkpoint/state_999.pt
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
 normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}-ph/normalization.npz
 offline_dataset_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}-ph/train.npz
@@ -43,7 +43,7 @@ env:
 
 wandb:
   entity: ${oc.env:DPPO_WANDB_ENTITY}
-  project: calql-ph-${env_name}
+  project: calql-${env_name}
   run: ${now:%H-%M-%S}_${name}
 
 train:
