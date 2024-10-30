@@ -212,6 +212,7 @@ class Gaussian_MLP(nn.Module):
                 out_activation_type=activation_type,
                 use_layernorm=use_layernorm,
                 use_layernorm_final=use_layernorm,
+                dropout=dropout,
             )
             self.mlp_mean = MLP(
                 mlp_dims[-1:] + [output_dim],
@@ -233,9 +234,7 @@ class Gaussian_MLP(nn.Module):
             if learn_fixed_std:
                 # initialize to fixed_std
                 self.logvar = torch.nn.Parameter(
-                    torch.log(
-                        torch.tensor([fixed_std**2 for _ in range(action_dim)])
-                    ),
+                    torch.log(torch.tensor([fixed_std**2 for _ in range(action_dim)])),
                     requires_grad=True,
                 )
         self.logvar_min = torch.nn.Parameter(

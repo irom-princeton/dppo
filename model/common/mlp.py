@@ -96,6 +96,7 @@ class ResidualMLP(nn.Module):
         out_activation_type="Identity",
         use_layernorm=False,
         use_layernorm_final=False,
+        dropout=0,
     ):
         super(ResidualMLP, self).__init__()
         hidden_dim = dim_list[1]
@@ -108,6 +109,7 @@ class ResidualMLP(nn.Module):
                     hidden_dim=hidden_dim,
                     activation_type=activation_type,
                     use_layernorm=use_layernorm,
+                    dropout=dropout,
                 )
                 for _ in range(1, num_hidden_layers, 2)
             ]
@@ -129,6 +131,7 @@ class TwoLayerPreActivationResNetLinear(nn.Module):
         hidden_dim,
         activation_type="Mish",
         use_layernorm=False,
+        dropout=0,
     ):
         super().__init__()
         self.l1 = nn.Linear(hidden_dim, hidden_dim)
@@ -137,6 +140,8 @@ class TwoLayerPreActivationResNetLinear(nn.Module):
         if use_layernorm:
             self.norm1 = nn.LayerNorm(hidden_dim, eps=1e-06)
             self.norm2 = nn.LayerNorm(hidden_dim, eps=1e-06)
+        if dropout > 0:
+            raise NotImplementedError("Dropout not implemented for residual MLP!")
 
     def forward(self, x):
         x_input = x
