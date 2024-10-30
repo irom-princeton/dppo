@@ -31,12 +31,11 @@ conda activate dppo
 pip install -e .
 ```
 
-3. Install specific environment dependencies (Gym / Robomimic / D3IL / Furniture-Bench) or all dependencies
+3. Install specific environment dependencies (Gym / Kitchen / Robomimic / D3IL / Furniture-Bench) or all dependencies (except for Kitchen, which has dependency conflicts with other tasks).
 ```console
-pip install -e .[gym] # or [robomimic], [d3il], [furniture]
-pip install -e .[all]
+pip install -e .[gym] # or [kitchen], [robomimic], [d3il], [furniture]
+pip install -e .[all] # except for Kitchen
 ```
-<!-- **Note**: Please do not set macros for robomimic and robosuite that the warnings suggest --- we will use some different global variables than the ones defined in macro.py  -->
 
 4. [Install MuJoCo for Gym and/or Robomimic](installation/install_mujoco.md). [Install D3IL](installation/install_d3il.md). [Install IsaacGym and Furniture-Bench](installation/install_furniture.md)
 
@@ -161,6 +160,7 @@ Our diffusion implementation is mostly based on [Diffuser](https://github.com/ja
 * `model.min_sampling_denoising_std`: <img src="https://latex.codecogs.com/gif.latex?\epsilon^\text{exp}_\text{min} "/>, minimum amount of noise when sampling at a denoising step
 * `model.min_logprob_denoising_std`: <img src="https://latex.codecogs.com/gif.latex?\epsilon^\text{prob}_\text{min} "/>, minimum standard deviation when evaluating likelihood at a denoising step
 * `model.clip_ploss_coef`: PPO clipping ratio
+* `train.batch_size`: you may notice the batch size is rather large --- this is due to the PPO update being in expectation over both environment steps and denoising steps (new in v0.6).
 
 ### DDIM fine-tuning
 
