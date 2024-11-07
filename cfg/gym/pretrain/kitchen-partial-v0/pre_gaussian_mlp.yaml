@@ -31,9 +31,9 @@ train:
     first_cycle_steps: 5000
     warmup_steps: 1
     min_lr: 1e-4
-  epoch_start_ema: 10
-  update_ema_freq: 5
-  save_model_freq: 1000
+  epoch_start_ema: 20
+  update_ema_freq: 1
+  save_model_freq: 500
 
 model:
   _target_: model.common.gaussian.GaussianModel

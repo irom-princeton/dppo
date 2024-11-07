@@ -31,8 +31,8 @@ train:
     first_cycle_steps: 3000
     warmup_steps: 1
     min_lr: 1e-4
-  epoch_start_ema: 10
-  update_ema_freq: 5
+  epoch_start_ema: 20
+  update_ema_freq: 1
   save_model_freq: 100
 
 model:

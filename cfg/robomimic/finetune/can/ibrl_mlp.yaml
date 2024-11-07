@@ -62,7 +62,7 @@ train:
     first_cycle_steps: 1000
     warmup_steps: 10
     min_lr: 1e-4
-  save_model_freq: 100000
+  save_model_freq: 50000
   val_freq: 10000
   render:
     freq: 10000
