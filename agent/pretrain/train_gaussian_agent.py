@@ -44,6 +44,10 @@ class TrainGaussianAgent(PreTrainAgent):
 
                 self.optimizer.step()
                 self.optimizer.zero_grad()
+
+                # update ema
+                if self.epoch % self.update_ema_freq == 0:
+                    self.step_ema()
             loss_train = np.mean(loss_train_epoch)
             ent_train = np.mean(ent_train_epoch)
 
@@ -64,10 +68,6 @@ class TrainGaussianAgent(PreTrainAgent):
 
             # update lr
             self.lr_scheduler.step()
-
-            # update ema
-            if self.epoch % self.update_ema_freq == 0:
-                self.step_ema()
 
             # save model
             if self.epoch % self.save_model_freq == 0 or self.epoch == self.n_epochs:
