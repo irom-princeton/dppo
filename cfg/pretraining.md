@@ -1,5 +1,7 @@
 ## Pre-training experiments
 
+**Update, Nov 6 2024**: we fixed the issue of EMA update being too infrequent causing slow pre-training. Now the number of epochs needed for pre-training can be much slower than those used in the configs. We recommend training with fewer epochs and testing the early checkpoints.
+
 ### Comparing diffusion-based RL algorithms (Sec. 5.1)
 Gym configs are under `cfg/gym/pretrain/<env_name>/`, and the config name is `pre_diffusion_mlp`. Robomimic configs are under `cfg/robomimic/pretrain/<env_name>/`, and the name is also `pre_diffusion_mlp`.
 
