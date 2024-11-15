@@ -3,9 +3,9 @@ defaults:
 hydra:
   run:
     dir: ${logdir}
-_target_: agent.eval.eval_gaussian_img_agent.EvalImgGaussianAgent
+_target_: agent.eval.eval_diffusion_img_agent.EvalImgDiffusionAgent
 
-name: ${env_name}_eval_gaussian_mlp_img_ta${horizon_steps}
+name: ${env_name}_eval_diffusion_mlp_img_ta${horizon_steps}_td${denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-eval/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
 base_policy_path:
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}-img.json
@@ -13,22 +13,25 @@ normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}-img/normalizat
 
 seed: 42
 device: cuda:0
-env_name: can
-obs_dim: 9
-action_dim: 7
+env_name: transport
+obs_dim: 18
+action_dim: 14
+denoising_steps: 100
 cond_steps: 1
 img_cond_steps: 1
-horizon_steps: 4
-act_steps: 4
+horizon_steps: 8
+act_steps: 8
+use_ddim: True
+ddim_steps: 5
 
-n_steps: 300  # each episode takes max_episode_steps / act_steps steps
+n_steps: 200  # each episode takes max_episode_steps / act_steps steps
 render_num: 0
 
 env:
-  n_envs: 50
+  n_envs: 30  # reduce gpu usage
   name: ${env_name}
   best_reward_threshold_for_success: 1
-  max_episode_steps: 300
+  max_episode_steps: 800
   save_video: False
   use_image_obs: True
   wrappers:
@@ -36,8 +39,12 @@ env:
       normalization_path: ${normalization_path}
       low_dim_keys: ['robot0_eef_pos',
                      'robot0_eef_quat',
-                     'robot0_gripper_qpos']
-      image_keys: ['robot0_eye_in_hand_image']
+                     'robot0_gripper_qpos',
+                     "robot1_eef_pos",
+                     "robot1_eef_quat",
+                     "robot1_gripper_qpos"]
+      image_keys: ['shouldercamera0_image', 
+                   'shouldercamera1_image']
       shape_meta: ${shape_meta}
     multi_step:
       n_obs_steps: ${cond_steps}
@@ -48,19 +55,23 @@ env:
 shape_meta:
   obs:
     rgb:
-      shape: [3, 96, 96]
+      shape: [6, 96, 96]
     state:
-      shape: [9]
+      shape: [18]
   action: 
-    shape: [7]
+    shape: [14]
 
 model:
-  _target_: model.common.gaussian.GaussianModel
+  _target_: model.diffusion.diffusion.DiffusionModel
+  predict_epsilon: True
+  denoised_clip_value: 1.0
   randn_clip_value: 3
   #
+  use_ddim: ${use_ddim}
+  ddim_steps: ${ddim_steps}
   network_path: ${base_policy_path}
   network:
-    _target_: model.common.mlp_gaussian.Gaussian_VisionMLP
+    _target_: model.diffusion.mlp_diffusion.VisionDiffusionMLP
     backbone:
       _target_: model.common.vit.VitEncoder
       obs_shape: ${shape_meta.obs.rgb.shape}
@@ -75,12 +86,17 @@ model:
         embed_style: embed2
         embed_norm: 0
     augment: False
+    num_img: 2
     spatial_emb: 128
-    mlp_dims: [512, 512, 512]
+    time_dim: 32
+    mlp_dims: [768, 768, 768]
     residual_style: True
-    fixed_std: 0.1
+    img_cond_steps: ${img_cond_steps}
     cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     horizon_steps: ${horizon_steps}
     action_dim: ${action_dim}
   horizon_steps: ${horizon_steps}
+  obs_dim: ${obs_dim}
+  action_dim: ${action_dim}
+  denoising_steps: ${denoising_steps}
   device: ${device}

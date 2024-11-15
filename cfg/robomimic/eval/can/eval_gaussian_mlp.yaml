@@ -7,7 +7,7 @@ _target_: agent.eval.eval_gaussian_agent.EvalGaussianAgent
 
 name: ${env_name}_eval_gaussian_mlp_ta${horizon_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-eval/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/can/can_pre_gaussian_mlp_ta4/2024-06-28_13-31-00/checkpoint/state_5000.pt
+base_policy_path:
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
 normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}/normalization.npz
 

@@ -34,12 +34,12 @@ shape_meta:
     shape: [7]
 
 train:
-  n_epochs: 4000
+  n_epochs: 2000
   batch_size: 256
   learning_rate: 1e-4
   weight_decay: 1e-6
   lr_scheduler:
-    first_cycle_steps: 8000
+    first_cycle_steps: 2000
     warmup_steps: 100
     min_lr: 1e-5
   save_model_freq: 500
@@ -53,7 +53,7 @@ model:
     backbone:
       _target_: model.common.vit.VitEncoder
       obs_shape: ${shape_meta.obs.rgb.shape}
-      num_channel: ${eval:'${shape_meta.obs.rgb.shape[0]} * ${img_cond_steps}'} # each image patch is history concatenated
+      num_channel: ${eval:'3 * ${img_cond_steps}'} # each image patch is history concatenated
       cfg:
         patch_size: 8
         depth: 1

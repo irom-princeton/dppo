@@ -5,7 +5,7 @@ hydra:
     dir: ${logdir}
 _target_: agent.eval.eval_diffusion_agent.EvalDiffusionAgent
 
-name: ${env_name}_eval_diffusion_mlp_ta${horizon_steps}_td${denoising_steps}
+name: ${env_name}_eval_diffusion_unet_ta${horizon_steps}_td${denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-eval/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
 base_policy_path:
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}.json
@@ -13,22 +13,22 @@ normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}/normalization.
 
 seed: 42
 device: cuda:0
-env_name: square
-obs_dim: 23
+env_name: lift
+obs_dim: 19
 action_dim: 7
 denoising_steps: 20
 cond_steps: 1
 horizon_steps: 4
 act_steps: 4
 
-n_steps: 400  # each episode takes max_episode_steps / act_steps steps
+n_steps: 75  # each episode takes max_episode_steps / act_steps steps
 render_num: 0
 
 env:
-  n_envs: 50
+  n_envs: 40
   name: ${env_name}
   best_reward_threshold_for_success: 1
-  max_episode_steps: 400
+  max_episode_steps: 300
   save_video: False
   wrappers:
     robomimic_lowdim:
@@ -51,14 +51,16 @@ model:
   #
   network_path: ${base_policy_path}
   network:
-    _target_: model.diffusion.mlp_diffusion.DiffusionMLP
-    time_dim: 32
-    mlp_dims: [1024, 1024, 1024]
-    cond_mlp_dims: [512, 64]
-    residual_style: True
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
-    horizon_steps: ${horizon_steps}
+    _target_: model.diffusion.unet.Unet1D
+    diffusion_step_embed_dim: 16
+    dim: 40
+    dim_mults: [1, 2]
+    kernel_size: 5
+    n_groups: 8
+    smaller_encoder: False
+    cond_predict_scale: True
     action_dim: ${action_dim}
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   horizon_steps: ${horizon_steps}
   obs_dim: ${obs_dim}
   action_dim: ${action_dim}

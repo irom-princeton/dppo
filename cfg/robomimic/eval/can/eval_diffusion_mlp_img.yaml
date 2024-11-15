@@ -7,7 +7,7 @@ _target_: agent.eval.eval_diffusion_img_agent.EvalImgDiffusionAgent
 
 name: ${env_name}_eval_diffusion_mlp_img_ta${horizon_steps}_td${denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-eval/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
-base_policy_path: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/can/can_pre_diffusion_mlp_img_ta4_td100/2024-07-30_22-23-55/checkpoint/state_5000.pt
+base_policy_path:
 robomimic_env_cfg_path: cfg/robomimic/env_meta/${env_name}-img.json
 normalization_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env_name}-img/normalization.npz
 
@@ -28,7 +28,7 @@ n_steps: 300  # each episode takes max_episode_steps / act_steps steps
 render_num: 0
 
 env:
-  n_envs: 50
+  n_envs: 20  # reduce gpu usage
   name: ${env_name}
   best_reward_threshold_for_success: 1
   max_episode_steps: 300

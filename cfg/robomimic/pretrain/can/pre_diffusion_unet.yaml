@@ -24,12 +24,12 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_epochs: 8000
+  n_epochs: 3000
   batch_size: 256
   learning_rate: 1e-4
   weight_decay: 1e-6
   lr_scheduler:
-    first_cycle_steps: 10000
+    first_cycle_steps: 3000
     warmup_steps: 100
     min_lr: 1e-5
   save_model_freq: 500
@@ -47,8 +47,8 @@ model:
     n_groups: 8
     smaller_encoder: False
     cond_predict_scale: True
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     action_dim: ${action_dim}
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   horizon_steps: ${horizon_steps}
   obs_dim: ${obs_dim}
   action_dim: ${action_dim}
