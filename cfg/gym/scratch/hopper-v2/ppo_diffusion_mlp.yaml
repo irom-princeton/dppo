@@ -42,7 +42,7 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 1000
+  n_train_itr: 301
   n_critic_warmup_itr: 0
   n_steps: 1000
   gamma: 0.99
@@ -67,7 +67,7 @@ train:
   reward_scale_running: True
   reward_scale_const: 1.0
   gae_lambda: 0.95
-  batch_size: 10000
+  batch_size: 5000
   update_epochs: 10
   vf_coef: 0.5
   target_kl: 1
@@ -75,7 +75,7 @@ train:
 model:
   _target_: model.diffusion.diffusion_ppo.PPODiffusion
   # HP to tune
-  gamma_denoising: 0.99
+  gamma_denoising: 1
   clip_ploss_coef: 0.1
   clip_ploss_coef_base: 0.1
   clip_ploss_coef_rate: 3
