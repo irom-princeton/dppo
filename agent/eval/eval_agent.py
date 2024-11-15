@@ -57,6 +57,7 @@ class EvalAgent:
         self.horizon_steps = cfg.horizon_steps
         self.max_episode_steps = cfg.env.max_episode_steps
         self.reset_at_iteration = cfg.env.get("reset_at_iteration", True)
+        self.save_full_observations = cfg.env.get("save_full_observations", False)
         self.furniture_sparse_reward = (
             cfg.env.specific.get("sparse_reward", False)
             if "specific" in cfg.env
@@ -85,6 +86,10 @@ class EvalAgent:
         assert not (
             self.n_render <= 0 and self.render_video
         ), "Need to set n_render > 0 if saving video"
+        self.traj_plotter = (
+            hydra.utils.instantiate(cfg.plotter)
+            if "plotter" in cfg else None
+        )
 
     def run(self):
         pass

@@ -37,6 +37,11 @@ class EvalDiffusionAgent(EvalAgent):
         prev_obs_venv = self.reset_env_all(options_venv=options_venv)
         firsts_trajs[0] = 1
         reward_trajs = np.zeros((self.n_steps, self.n_envs))
+        if self.save_full_observations:  # state-only
+            obs_full_trajs = np.empty((0, self.n_envs, self.obs_dim))
+            obs_full_trajs = np.vstack(
+                (obs_full_trajs, prev_obs_venv["state"][:, -1][None])
+            )
 
         # Collect a set of trajectories from env
         for step in range(self.n_steps):
@@ -62,6 +67,13 @@ class EvalDiffusionAgent(EvalAgent):
             )
             reward_trajs[step] = reward_venv
             firsts_trajs[step + 1] = terminated_venv | truncated_venv
+            if self.save_full_observations:  # state-only
+                obs_full_venv = np.array(
+                    [info["full_obs"]["state"] for info in info_venv]
+                )  # n_envs x act_steps x obs_dim
+                obs_full_trajs = np.vstack(
+                    (obs_full_trajs, obs_full_venv.transpose(1, 0, 2))
+                )
 
             # update for next step
             prev_obs_venv = obs_venv
@@ -107,6 +119,16 @@ class EvalDiffusionAgent(EvalAgent):
             avg_best_reward = 0
             success_rate = 0
             log.info("[WARNING] No episode completed within the iteration!")
+
+        # Plot state trajectories (only in D3IL)
+        if self.traj_plotter is not None:
+            self.traj_plotter(
+                obs_full_trajs=obs_full_trajs,
+                n_render=self.n_render,
+                max_episode_steps=self.max_episode_steps,
+                render_dir=self.render_dir,
+                itr=0,
+            )
 
         # Log loss and save metrics
         time = timer()
