@@ -60,22 +60,22 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 151
+  n_train_itr: 81
   n_critic_warmup_itr: 2
   n_steps: 300
   gamma: 0.999
   augment: True
   grad_accumulate: 15
-  actor_lr: 1e-4
+  actor_lr: 5e-5
   actor_weight_decay: 0
   actor_lr_scheduler:
-    first_cycle_steps: 1000
+    first_cycle_steps: ${train.n_train_itr}
     warmup_steps: 10
-    min_lr: 1e-4
+    min_lr: 5e-5
   critic_lr: 1e-3
   critic_weight_decay: 0
   critic_lr_scheduler:
-    first_cycle_steps: 1000
+    first_cycle_steps: ${train.n_train_itr}
     warmup_steps: 10
     min_lr: 1e-3
   save_model_freq: 100

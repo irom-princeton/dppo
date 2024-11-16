@@ -61,7 +61,7 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 500
+  n_train_itr: 201
   n_critic_warmup_itr: 2
   n_steps: 400
   gamma: 0.999
@@ -70,13 +70,13 @@ train:
   actor_lr: 1e-5
   actor_weight_decay: 0
   actor_lr_scheduler:
-    first_cycle_steps: 500
+    first_cycle_steps: ${train.n_train_itr}
     warmup_steps: 10
-    min_lr: 1e-6
+    min_lr: 1e-5
   critic_lr: 1e-3
   critic_weight_decay: 0
   critic_lr_scheduler:
-    first_cycle_steps: 500
+    first_cycle_steps: ${train.n_train_itr}
     warmup_steps: 10
     min_lr: 1e-3
   save_model_freq: 100
@@ -90,7 +90,7 @@ train:
   gae_lambda: 0.95
   batch_size: 1000
   logprob_batch_size: 1000
-  update_epochs: 8
+  update_epochs: 10
   vf_coef: 0.5
   target_kl: 1
 
@@ -119,7 +119,7 @@ model:
     spatial_emb: 128
     mlp_dims: [768, 768, 768]
     residual_style: True
-    fixed_std: 0.08
+    fixed_std: 0.1
     learn_fixed_std: True
     std_min: 0.01
     std_max: 0.2
@@ -146,9 +146,9 @@ model:
         embed_style: embed2
         embed_norm: 0
     img_cond_steps: ${img_cond_steps}
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     mlp_dims: [256, 256, 256]
     activation_type: Mish
     residual_style: True
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   horizon_steps: ${horizon_steps}
   device: ${device}

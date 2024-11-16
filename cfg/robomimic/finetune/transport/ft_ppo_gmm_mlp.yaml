@@ -26,7 +26,7 @@ env:
   name: ${env_name}
   best_reward_threshold_for_success: 1
   max_episode_steps: 800
-  save_video: false
+  save_video: False
   wrappers:
     robomimic_lowdim:
       normalization_path: ${normalization_path}
@@ -49,21 +49,21 @@ wandb:
   run: ${now:%H-%M-%S}_${name}
 
 train:
-  n_train_itr: 1000
+  n_train_itr: 201
   n_critic_warmup_itr: 2
   n_steps: 400
   gamma: 0.999
-  actor_lr: 1e-5
+  actor_lr: 1e-4
   actor_weight_decay: 0
   actor_lr_scheduler:
-    first_cycle_steps: 1000
-    warmup_steps: 10
-    min_lr: 1e-6
+    first_cycle_steps: ${train.n_train_itr}
+    warmup_steps: 0
+    min_lr: 1e-4
   critic_lr: 1e-3
   critic_weight_decay: 0
   critic_lr_scheduler:
-    first_cycle_steps: 1000
-    warmup_steps: 10
+    first_cycle_steps: ${train.n_train_itr}
+    warmup_steps: 0
     min_lr: 1e-3
   save_model_freq: 100
   val_freq: 10
@@ -75,7 +75,7 @@ train:
   reward_scale_const: 1.0
   gae_lambda: 0.95
   batch_size: 10000
-  update_epochs: 8
+  update_epochs: 5
   vf_coef: 0.5
   target_kl: 1
 
@@ -87,7 +87,7 @@ model:
     _target_: model.common.mlp_gmm.GMM_MLP
     mlp_dims: [1024, 1024, 1024]
     residual_style: True
-    fixed_std: 0.08
+    fixed_std: 0.1
     learn_fixed_std: True
     std_min: 0.01
     std_max: 0.2
@@ -97,9 +97,9 @@ model:
     action_dim: ${action_dim}
   critic:
     _target_: model.common.critic.CriticObs
-    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
     mlp_dims: [256, 256, 256]
     activation_type: Mish
     residual_style: True
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
   horizon_steps: ${horizon_steps}
   device: ${device}
