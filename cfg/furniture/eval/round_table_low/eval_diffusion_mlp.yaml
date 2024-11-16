@@ -13,7 +13,7 @@ normalization_path: ${oc.env:DPPO_DATA_DIR}/furniture/${env.specific.furniture}_
 seed: 42
 device: cuda:0
 env_name: ${env.specific.furniture}_${env.specific.randomness}_dim
-obs_dim: 58
+obs_dim: 44
 action_dim: 10
 denoising_steps: 100
 cond_steps: 1
@@ -29,11 +29,11 @@ env:
   n_envs: 1000
   name: ${env_name}
   env_type: furniture
-  max_episode_steps: 700
-  best_reward_threshold_for_success: 1
+  max_episode_steps: 1000
+  best_reward_threshold_for_success: 2
   specific:
     headless: true
-    furniture: one_leg
+    furniture: round_table
     randomness: low
     normalization_path: ${normalization_path}
     obs_steps: ${cond_steps}
