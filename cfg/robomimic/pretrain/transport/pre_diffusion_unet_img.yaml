@@ -3,9 +3,9 @@ defaults:
 hydra:
   run:
     dir: ${logdir}
-_target_: agent.pretrain.train_gaussian_agent.TrainGaussianAgent
+_target_: agent.pretrain.train_diffusion_agent.TrainDiffusionAgent
 
-name: ${env}_pre_gaussian_mlp_img_ta${horizon_steps}
+name: ${env}_pre_diffusion_unet_img_ta${horizon_steps}_td${denoising_steps}
 logdir: ${oc.env:DPPO_LOG_DIR}/robomimic-pretrain/${name}/${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
 train_dataset_path: ${oc.env:DPPO_DATA_DIR}/robomimic/${env}-img/train.npz
 
@@ -14,7 +14,8 @@ device: cuda:0
 env: transport
 obs_dim: 18  # proprioception only
 action_dim: 14
-horizon_steps: 8
+denoising_steps: 100
+horizon_steps: 16
 cond_steps: 1
 img_cond_steps: 1
 
@@ -44,9 +45,11 @@ train:
   save_model_freq: 500
 
 model:
-  _target_: model.common.gaussian.GaussianModel
+  _target_: model.diffusion.diffusion.DiffusionModel
+  predict_epsilon: True
+  denoised_clip_value: 1.0
   network:
-    _target_: model.common.mlp_gaussian.Gaussian_VisionMLP
+    _target_: model.diffusion.unet.VisionUnet1D
     backbone:
       _target_: model.common.vit.VitEncoder
       obs_shape: ${shape_meta.obs.rgb.shape}
@@ -61,14 +64,21 @@ model:
     augment: True
     num_img: 2
     spatial_emb: 128
-    mlp_dims: [768, 768, 768]
-    residual_style: True
-    fixed_std: 0.1
+    #
+    diffusion_step_embed_dim: 32
+    dim: 64
+    dim_mults: [1, 2]
+    kernel_size: 5
+    n_groups: 8
+    smaller_encoder: False
+    cond_predict_scale: True
     img_cond_steps: ${img_cond_steps}
     cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
-    horizon_steps: ${horizon_steps}
     action_dim: ${action_dim}
   horizon_steps: ${horizon_steps}
+  obs_dim: ${obs_dim}
+  action_dim: ${action_dim}
+  denoising_steps: ${denoising_steps}
   device: ${device}
 
 ema:

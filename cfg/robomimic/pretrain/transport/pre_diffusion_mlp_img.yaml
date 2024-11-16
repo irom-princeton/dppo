@@ -27,7 +27,7 @@ wandb:
 shape_meta:
   obs:
     rgb:
-      shape: [3, 96, 96]  # not counting img_cond_steps
+      shape: [6, 96, 96]  # not counting img_cond_steps
     state:
       shape: [9]
   action: 
