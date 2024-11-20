@@ -280,6 +280,11 @@ def get_checkpoint_download_url(cfg):
     ):
         return "https://drive.google.com/file/d/1T-NGgBmT-UmcVWADygXj873IyWLewvsU/view?usp=drive_link"
     elif (
+        "lift_pre_diffusion_unet_img_ta4_td100/2024-11-15_17-35-19_42/checkpoint/state_500.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1-gB4Tz5ityFMnegX7uRz5PCcb7-JTOZg/view?usp=drive_link"
+    elif (
         "lift_pre_diffusion_mlp_ta4_td20/2024-06-28_14-47-58/checkpoint/state_5000.pt"
         in path
     ):
@@ -323,6 +328,11 @@ def get_checkpoint_download_url(cfg):
         in path
     ):
         return "https://drive.google.com/file/d/1s346KCe2aar_tXX7u8rzjRF3kpwVpH5c/view?usp=drive_link"
+    elif (
+        "can_pre_diffusion_unet_img_ta4_td100/2024-11-15_17-34-05_42/checkpoint/state_500.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1SHKcorbyGDg3I0h6hvOkQXWQT4dD0gGh/view?usp=drive_link"
     elif (
         "can_pre_diffusion_mlp_ta4_td20/2024-06-28_13-29-54/checkpoint/state_5000.pt"
         in path
@@ -394,6 +404,11 @@ def get_checkpoint_download_url(cfg):
     ):
         return "https://drive.google.com/file/d/11IEgQe0LFI23hn1Cwf6Z_YfJdDilVc0z/view?usp=drive_link"
     elif (
+        "square_pre_diffusion_unet_img_ta4_td100/2024-11-15_17-36-37_42/checkpoint/state_500.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1fcOi9srPOVPwEzBRV-1pzVDq3uap3YAs/view?usp=drive_link"
+    elif (
         "square_pre_diffusion_mlp_ta4_td20/2024-07-10_01-46-16/checkpoint/state_8000.pt"
         in path
     ):
@@ -459,6 +474,11 @@ def get_checkpoint_download_url(cfg):
         in path
     ):
         return "https://drive.google.com/file/d/1MNGT8j9x1uudugGUcia-xwP_7f7xVY4K/view?usp=drive_link"
+    elif (
+        "transport_pre_diffusion_unet_img_ta16_td100/2024-11-15_17-55-22_42/checkpoint/state_1000.pt"
+        in path
+    ):
+        return "https://drive.google.com/file/d/1G5LTxgRZvPm7NCbfByL4q_FbNvRgWguW/view?usp=drive_link"
     elif (
         "transport_pre_diffusion_mlp_ta8_td20/2024-07-08_11-18-59/checkpoint/state_8000.pt"
         in path
