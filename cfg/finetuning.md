@@ -1,5 +1,7 @@
 ## Fine-tuning experiments
 
+**Update, Nov 20 2024**: In v0.7 we updated the fine-tuning configs as we find sample efficiency can be improved with higher actor learning rate and other hyperparameters. If you would like to replicate the original experimental results from the paper, please use the configs from v0.6. Otherwise we recommmend starting with configs from v0.7 for your applications.
+
 ### Comparing diffusion-based RL algorithms (Sec. 5.1)
 Gym configs are under `cfg/gym/finetune/<env_name>/`, and the naming follows `ft_<alg_name>_diffusion_mlp`, e.g., `ft_awr_diffusion_mlp`. `alg_name` is one of `rwr`, `awr`, `dipo`, `idql`, `dql`, `qsm`, `ppo` (DPPO), `ppo_exact` (exact likelihood). They share the same pre-trained checkpoint in each env.
 
