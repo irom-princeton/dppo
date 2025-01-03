@@ -23,6 +23,7 @@ horizon_steps: 4
 act_steps: 4
 use_ddim: True
 ddim_steps: 5
+ft_denoising_steps: 5
 
 n_steps: 300  # each episode takes max_episode_steps / act_steps steps
 render_num: 0
@@ -58,7 +59,8 @@ shape_meta:
     shape: [7]
 
 model:
-  _target_: model.diffusion.diffusion.DiffusionModel
+  _target_: model.diffusion.diffusion_eval_ft.DiffusionEvalFT
+  ft_denoising_steps: ${ft_denoising_steps}
   predict_epsilon: True
   denoised_clip_value: 1.0
   randn_clip_value: 3

@@ -21,6 +21,7 @@ horizon_steps: 8
 act_steps: 8
 use_ddim: True
 ddim_steps: 5
+ft_denoising_steps: 5
 
 n_steps: ${eval:'round(${env.max_episode_steps} / ${act_steps})'}
 render_num: 0
@@ -41,7 +42,8 @@ env:
     sparse_reward: True
 
 model:
-  _target_: model.diffusion.diffusion.DiffusionModel
+  _target_: model.diffusion.diffusion_eval_ft.DiffusionEvalFT
+  ft_denoising_steps: ${ft_denoising_steps}
   predict_epsilon: True
   denoised_clip_value: 1.0
   randn_clip_value: 3
