@@ -138,7 +138,7 @@ See [here](cfg/finetuning.md) for details of the experiments in the paper.
 * Videos of trials in Robomimic tasks can be recorded by specifying `env.save_video=True`, `train.render.freq=<iterations>`, and `train.render.num=<num_video>` in fine-tuning configs.
 
 ## Usage - Evaluation
-Pre-trained or fine-tuned policies can be evaluated without running the fine-tuning script now. Some example configs are provided under `cfg/{gym/robomimic/furniture}/eval}` including ones below. Set `base_policy_path` to override the default checkpoint. 
+Pre-trained or fine-tuned policies can be evaluated without running the fine-tuning script now. Some example configs are provided under `cfg/{gym/robomimic/furniture}/eval}` including ones below. `ft_denoising_steps` needs to match fine-tuning config. Set `base_policy_path` to override the default checkpoint. 
 ```console
 python script/run.py --config-name=eval_diffusion_mlp \
     --config-dir=cfg/gym/eval/hopper-v2

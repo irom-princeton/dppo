@@ -128,7 +128,7 @@ class TrainAgent:
         data = {
             "itr": self.itr,
             "model": self.model.state_dict(),
-        }
+        }  # right now `model` includes weights for `network`, `actor`, `actor_ft`. Weights for `network` is redundant, and we can use `actor` weights as the base policy (earlier denoising steps) and `actor_ft` weights as the fine-tuned policy (later denoising steps) during evaluation.
         savepath = os.path.join(self.checkpoint_dir, f"state_{self.itr}.pt")
         torch.save(data, savepath)
         log.info(f"Saved model to {savepath}")

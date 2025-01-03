@@ -289,6 +289,7 @@ class DiffusionModel(nn.Module):
                 t=t_b,
                 cond=cond,
                 index=index_b,
+                deterministic=deterministic,
             )
             std = torch.exp(0.5 * logvar)
 
