@@ -20,8 +20,8 @@ class DiffusionEval(DiffusionModel):
     def __init__(
         self,
         network_path,
+        ft_denoising_steps,  # if running pre-trained model (not fine-tuned), set it to zero; if running fine-tuned model, need to specify the correct number of denoising steps fine-tuned, so that here it knows which model (base or ft) to use for each denoising step
         use_ddim=False,
-        ft_denoising_steps=0,  # if running fine-tuned model, need to specify the correct number of denoising steps fine-tuned, so that here it knows which model (base or ft) to use for each denoising step
         **kwargs,
     ):
         # do not let base class load model

@@ -19,7 +19,7 @@ denoising_steps: 20
 cond_steps: 1
 horizon_steps: 4
 act_steps: 4
-ft_denoising_steps: 10
+ft_denoising_steps: 0
 
 n_steps: 25
 render_num: 40
@@ -48,7 +48,7 @@ env:
       reset_within_step: False
 
 model:
-  _target_: model.diffusion.diffusion_eval_ft.DiffusionEvalFT
+  _target_: model.diffusion.diffusion_eval_ft.DiffusionEval
   ft_denoising_steps: ${ft_denoising_steps}
   predict_epsilon: True
   denoised_clip_value: 1.0
