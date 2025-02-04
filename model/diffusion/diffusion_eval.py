@@ -16,7 +16,7 @@ from model.diffusion.diffusion import DiffusionModel
 from model.diffusion.sampling import extract
 
 
-class DiffusionEvalFT(DiffusionModel):
+class DiffusionEval(DiffusionModel):
     def __init__(
         self,
         network_path,
